@@ -1,4 +1,4 @@
 export { getArtwork, getImageUrl, searchArtworks } from "./service";
-export { Artwork, Thumbnail } from "./schemas";
-export { QueryClause } from "./query";
-export { PaginatedQuery } from "./pagination";
+export type { Artwork, Thumbnail } from "./schemas";
+export type { QueryClause } from "./query";
+export type { PaginatedQuery } from "./pagination";

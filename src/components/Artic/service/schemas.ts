@@ -4,7 +4,7 @@ export const thumbnailProps = {
   alt_text: t.isString(),
   width: t.isNumber(),
   height: t.isNumber(),
-  lqip: t.isNullable(t.isString())
+  lqip: t.isNullable(t.isString()),
 };
 export const isThumbnail = t.isObject(thumbnailProps);
 export type Thumbnail = t.InferType<typeof isThumbnail>;
@@ -19,7 +19,7 @@ export const artworkProps = {
   place_of_origin: t.isNullable(t.isString()),
   classification_titles: t.isArray(t.isString()),
   subject_titles: t.isArray(t.isString()),
-  thumbnail: isThumbnail
+  thumbnail: isThumbnail,
 };
 export const isArtwork = t.isObject(artworkProps);
 export type Artwork = t.InferType<typeof isArtwork>;

@@ -14,7 +14,7 @@ const ARTIC_IMAGEAPI_BASE = "https://www.artic.edu/iiif/2";
 export async function getArtwork(id: string | number): Promise<Artwork> {
   const artworkEndpoint = `${ARTIC_API_BASE}/artworks/${String(id)}`;
   const urlParams = new URLSearchParams({
-    fields: Object.keys(artworkProps).join(",")
+    fields: Object.keys(artworkProps).join(","),
   });
 
   const response = await fetch(artworkEndpoint + "?" + urlParams);
@@ -29,7 +29,7 @@ export async function getArtwork(id: string | number): Promise<Artwork> {
     }
   } else {
     const errorDetails = await response.json();
-    const error = new APIError(errorDetails as APIErrorDetails);
+    const error = new APIError(errorDetails);
     throw error;
   }
 }
@@ -39,45 +39,38 @@ export async function getArtwork(id: string | number): Promise<Artwork> {
  * @param {QueryClause} query
  * @see https://www.elastic.co/guide/en/elasticsearch/reference/6.0/query-dsl.html
  */
-// export async function searchArtworks(
-//   query: QueryClause,
-//   pagination: PaginatedQuery = { from: 0, size: 25 }
-// ): Promise<{ data: Artwork[]; pagination: Pagination }> {
-//   const searchArtworkEndpoint = `${ARTIC_API_BASE}/artworks/search`;
-//   const urlParams = new URLSearchParams({
-//     fields: Object.keys(artworkProps).join(","),
-//     from: String(pagination.from),
-//     size: String(pagination.size)
-//   });
-
-//   const response = await fetch(searchArtworkEndpoint + "?" + urlParams, {
-//     method: "POST",
-//     body: JSON.stringify({
-//       query: query
-//     })
-//   });
-//   if (response.ok) {
-//     const payload = (await response.json()) as {
-//       data: Artwork[];
-//       pagination: Pagination;
-//     };
-//     return payload;
-//   } else {
-//     const errorDetails = await response.json();
-//     const error = new APIError(errorDetails as APIErrorDetails);
-//     throw error;
-//   }
-// }
 export async function searchArtworks(
   query: QueryClause,
   pagination: PaginatedQuery = { from: 0, size: 25 }
 ): Promise<{ data: Artwork[]; pagination: Pagination }> {
-  const mockedResponse = await import("./searchArtworks.mock");
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(mockedResponse.searchArtworks(query, pagination));
-    }, 3000);
+  const searchArtworkEndpoint = `${ARTIC_API_BASE}/artworks/search`;
+  const urlParams = new URLSearchParams({
+    fields: Object.keys(artworkProps).join(","),
+    from: String(pagination.from),
+    size: String(pagination.size),
   });
+
+  const response = await fetch(searchArtworkEndpoint + "?" + urlParams, {
+    method: "POST",
+    headers: {
+      Accept: ["application/json", "text/plain", "*/*"].join(","),
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query: query,
+    }),
+  });
+  if (response.ok) {
+    const payload = (await response.json()) as {
+      data: Artwork[];
+      pagination: Pagination;
+    };
+    return payload;
+  } else {
+    const errorDetails = await response.json();
+    const error = new APIError(errorDetails as APIErrorDetails);
+    throw error;
+  }
 }
 
 /**

@@ -13,6 +13,7 @@ export default function getSuspenseReader<T = unknown>(action: fnOrPromise<T>) {
   let thePromise: PromiseLike<T>;
   let theStatus: SuspenseStatus<T> = { status: "pending" };
 
+  console.debug("typeof action", typeof action);
   if (typeof action === "function") {
     thePromise = action();
   } else {
@@ -26,17 +27,21 @@ export default function getSuspenseReader<T = unknown>(action: fnOrPromise<T>) {
     },
     (error) => {
       console.log("error", error);
-      theStatus = { status: "error", result: result };
+      theStatus = { status: "error", result: error };
     }
   );
 
   return () => {
+    console.log("theStatus", theStatus.status);
     switch (theStatus.status) {
       case "pending":
+        console.debug("pending");
         throw suspender;
       case "error":
+        console.debug("error");
         throw theStatus.result;
       case "success":
+        console.debug("success");
         return theStatus.result;
     }
   };

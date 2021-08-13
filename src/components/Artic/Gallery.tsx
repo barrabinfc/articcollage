@@ -1,5 +1,8 @@
-import React, { Suspense, useState } from "react";
-import getSuspenseReader from "../../utils/getSuspenseReader";
+import React, { useState } from "react";
+import getSuspenseReader from "../../lib/getSuspenseReader";
+import { cn } from "../../lib/helpers";
+
+import styles from './Gallery.module.scss';
 
 import { Image } from "./Image";
 import {
@@ -13,47 +16,53 @@ function createArtworksListReader(
   query: QueryClause,
   pagination: PaginatedQuery = { from: 0, size: 10 }
 ): () => Artwork[] {
+  // for now, lets ignore pagination response and just return Artwork[]
+  const action = searchArtworks(query, pagination).then((payload) => payload.data)
+
   return getSuspenseReader(
-    // for now, lets ignore pagination response and just return Artwork[]
-    searchArtworks(query, pagination).then((payload) => payload.data)
+    action
   );
 }
 
-function useArtworkList(
+export function useArtworkList(
   query: QueryClause,
   pagination: PaginatedQuery = { from: 0, size: 10 }
 ) {
-  return useState<() => Artwork[]>(() =>
-    createArtworksListReader(query, pagination)
-  );
+  return useState<() => Artwork[]>(() => createArtworksListReader(query, pagination));
 }
 
-function GalleryItem({ artworkReader }: { artworkReader: () => Artwork }) {
+export interface GalleryItemProps {
+  className: string|string[],
+  artworkReader: () => Artwork
+}
+
+function GalleryItem({ className, artworkReader }: GalleryItemProps) {
   const theArtwork = artworkReader();
   return (
-    <div className="gallery-item">
-      <div className="content-container">
-        <h3 className="title">{theArtwork.title}</h3>
-        <p className="artist">{theArtwork.artist_title}</p>
-      </div>
-      <div className="picture-container">
-        <Image artworkReader={artworkReader} />
+    <div className={cn(styles.card,className)}>
+      <div className={cn(styles.contentContainer)}>
+        <div className={cn(styles.content)}>
+          <div className={cn(styles.avatar)}>
+            <Image artworkReader={artworkReader} />
+          </div>
+
+          <div className={cn(styles.titleContainer)}>
+            <h3 className={cn(styles.title)}>{theArtwork.title}</h3>
+            <p className={cn(styles.description)}>{theArtwork.artist_title}</p>
+          </div>
+        </div>          
       </div>
     </div>
   );
 }
 
-export default function ArticGallery() {
-  const [artworkList, setArtworkList] = useArtworkList({
-    match_phrase: "prints and drawing"
-  });
+export default function ArticGallery({artworkListReader}: {artworkListReader: () => Artwork[]}) {
+  const list = artworkListReader();
 
-  console.debug("Rendering:ArticGallery");
-  debugger;
   return (
-    <section className="artic-gallery">
-      {artworkList().map((artworkItem) => (
-        <GalleryItem artworkReader={() => artworkItem} />
+    <section className={styles.galleryGrid}>
+      {list.map((artworkItem) => (
+        <GalleryItem className='item' key={artworkItem.id} artworkReader={() => artworkItem} />
       ))}
     </section>
   );

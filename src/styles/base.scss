@@ -1,0 +1,56 @@
+@use "colorscheme" as colors;
+
+@import url("https://rsms.me/inter/inter.css");
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Encode+Sans:wght@100&display=swap");
+
+:root {
+  --font-serif: "Cormorant Upright", serif;
+  --font-sans: "Encode Sans", Helvetica, Arial, sans-serif;
+  --font-title: "Inter var", sans-serif;
+
+  /** Default colorscheme is light */
+  color-scheme: light;
+  --brand: var(--brand-light);
+  --text1: var(--text1-light);
+  --text2: var(--text2-light);
+  --surface1: var(--surface1-light);
+  --surface2: var(--surface2-light);
+  --surface3: var(--surface3-light);
+  --surface4: var(--surface4-light);
+  --surface-shadow: var(--surface-shadow-light);
+  --shadow-strength: var(--shadow-strength-light);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+body {
+  color: var(--text1);
+  background-color: var(--surface2-light);
+  font-family: var(--font-sans);
+  font-variation-settings: "wght" 900;
+  text-align: center;
+
+  margin: 0;
+  padding: 0;
+  overflow-y: scroll;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+#root {
+  max-width: 1440px;
+  width: 100%;
+  flex: 1 1 100%;
+  padding: 32px 32px;
+}
+
+h1 {
+  font-size: 48px;
+}
