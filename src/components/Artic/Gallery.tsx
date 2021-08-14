@@ -4,12 +4,12 @@ import { cn } from "../../lib/helpers";
 
 import styles from './Gallery.module.scss';
 
-import { Image } from "./Image";
+import { SmartImage } from "./Image";
 import {
   searchArtworks,
   PaginatedQuery,
   QueryClause,
-  Artwork
+  Artwork,
 } from "./service";
 
 function createArtworksListReader(
@@ -37,13 +37,16 @@ export interface GalleryItemProps {
 }
 
 function GalleryItem({ className, artworkReader }: GalleryItemProps) {
+
   const theArtwork = artworkReader();
+
   return (
     <div className={cn(styles.card,className)}>
       <div className={cn(styles.contentContainer)}>
         <div className={cn(styles.content)}>
           <div className={cn(styles.avatar)}>
-            <Image artworkReader={artworkReader} />
+            <SmartImage 
+              artworkReader={artworkReader} />
           </div>
 
           <div className={cn(styles.titleContainer)}>

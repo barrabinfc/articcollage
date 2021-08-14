@@ -80,3 +80,12 @@ export async function searchArtworks(
 export function getImageUrl(identifier: string): string {
   return `${ARTIC_IMAGEAPI_BASE}/${identifier}/full/843,/0/default.jpg`;
 }
+
+export async function loadImageBlob(imageUrl: string): Promise<Blob> {
+  const response = await fetch(imageUrl);
+  if (response.ok) {
+    return response.blob();
+  } else {
+    throw new Error(`Could not fetch image: ${imageUrl}`);
+  }
+}

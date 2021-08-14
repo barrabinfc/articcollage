@@ -6,6 +6,12 @@ export function range(n) {
   return Array.from({ length: n }).map((_, i) => i);
 }
 
+export async function timeout(ms: number) {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve, ms);
+  });
+}
+
 /**
  * Errors log formatting helpers
  */

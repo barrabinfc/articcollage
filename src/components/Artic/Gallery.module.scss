@@ -3,7 +3,7 @@
 @use "src/styles/grids" as grids;
 @use "src/styles/helpers" as helpers;
 
-// $cardHeight: 280px;
+$cardHeight: 280px;
 
 .galleryGrid {
   @include grids.flexGrid(3);
@@ -55,7 +55,7 @@
   :global(img) {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     // height: $cardHeight;
   }
 }
