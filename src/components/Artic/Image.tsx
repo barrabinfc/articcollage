@@ -25,7 +25,7 @@ export function Image({ alt, imageUrl, width, height, className}: ImageProps & {
       src={imageUrl}
       initial={{opacity: 0}}
       animate={{opacity: 1}}
-      transition={{duration: 1.4}}
+      transition={{duration: 1.2}}
       width={width} 
       height={height} />;
 }
@@ -54,6 +54,10 @@ export function createImageReader(
    imageUrl: string
 ): () => string {
   const action = loadImageBlob(imageUrl).then((blob) => URL.createObjectURL(blob))
+  // const action = new Promise<string>( (resolve) => {
+  //   return;
+  // });
+
   return getSuspenseReader(
     action
   );
@@ -88,18 +92,10 @@ export function SmartImage({ artworkReader }: {artworkReader: () => Artwork}) {
   <div className={styles.smartImage} >
     <AnimatePresence>
       {/* <Suspense fallback={<AnimatedThumbImage />}> */}
-      <Suspense fallback={<div style={{width: "100%",height: "100%"}} />}>
-        <LazyImage alt={alt_text} imageReader={imageReaderRef.current} width={width} height={height} />
+      <Suspense fallback={<div className="spinner" style={{position: "absolute",}} />}>
+        <LazyImage key='hqip' alt={alt_text} imageReader={imageReaderRef.current} width={width} height={height} />
       </Suspense>
-      <motion.div style={{
-        position: "absolute",
-        width: `100%`,
-        height: `100%`,
-        backgroundImage: `url(${thumbnailUrl})`,
-        backgroundSize: 'contain',
-        zIndex: -1,
-        transform: `scale(0.95)`
-      }} />
+      <motion.img key='lqip' src={thumbnailUrl} alt={alt_text} />
     </AnimatePresence>
   </div>)
 }
